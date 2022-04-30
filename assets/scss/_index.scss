@@ -1,0 +1,21 @@
+.category {
+	&__card {
+		img {
+			object-fit: cover;
+			object-position: center;
+			width: 80%;
+			height: 70%;
+		}
+		p {
+			text-transform: capitalize;
+			position: absolute;
+			bottom: 0;
+			text-align: center;
+			margin-top: 20px;
+		}
+	}
+	.v-sheet {
+		position: relative;
+		z-index: 1;
+	}
+}
