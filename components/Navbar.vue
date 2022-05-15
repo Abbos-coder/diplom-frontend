@@ -37,7 +37,7 @@
                   </v-icon>
                   Добавить продукт
                 </nuxt-link>
-                <nuxt-link to="/">
+                <nuxt-link to="/my-products">
                   <v-icon class="mr-2" size="22"> mdi-store </v-icon>
                   Мои продукты
                 </nuxt-link>
