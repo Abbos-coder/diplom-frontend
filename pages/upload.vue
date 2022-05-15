@@ -30,13 +30,6 @@
             hide-spin-buttons
             :rules="[(v) => !!v || 'This is required']"
           ></v-text-field>
-          <v-text-field
-            v-model="product.rating"
-            type="number"
-            label="Рейтинг"
-            hide-spin-buttons
-            :rules="[(v) => !!v || 'This is required']"
-          ></v-text-field>
           <v-switch
             v-model="product.status"
             :label="`Складъ: ${product.status ? 'в наличии' : 'нет в наличии'}`"
@@ -112,11 +105,12 @@ export default {
     valid: true,
     image: null,
     product: {
+      user_id: '',
       image: "",
       category: "",
       name: "",
       price: null,
-      rating: null,
+      rating: 0,
       status: false,
     },
 
@@ -179,15 +173,17 @@ export default {
           },
         };
         let formData = new FormData();
+        formData.append("userId", this.product.user_id);
         formData.append("image", this.image);
         formData.append("category", this.product.category.toLowerCase());
-        formData.append("title", this.product.title);
+        formData.append("title", this.product.name);
         formData.append("price", this.product.price);
         formData.append("rating", this.product.rating);
         formData.append("status", this.product.status);
         this.$axios
           .$post("/api/product", formData, config)
           .then((res) => {
+            console.log(res);
             this.$refs.form.reset();
             this.product.image = null;
             this.$toasted.success("Продукт добавлен", {
@@ -198,12 +194,19 @@ export default {
           })
           .catch((error) => {
             console.error(error);
+            this.$toasted.error('Bad request error !', {
+              theme: 'bubble',
+              position: 'top-center',
+              duration: 3000
+            })
           });
       }
     },
   },
   mounted() {
-    // console.log("token" + this.$auth.strategy.token.get());
+    const get_data = localStorage.getItem("user");
+    const user = JSON.parse(get_data);
+    this.product.user_id = user._id
   },
 };
 </script>
