@@ -1,50 +1,25 @@
 <template>
-   <div>
-      <v-navigation-drawer v-model="$store.state.sidebar" fixed clipped app>
-         <v-list-item>
-            <!-- <v-list-item-title> Category </v-list-item-title> -->
-            <h1 class="ml-8">
-               <v-icon color="primary">mdi-shape</v-icon> Category
-            </h1>
-            <v-list-item-content> </v-list-item-content>
-         </v-list-item>
+   <div class="container">
+      <v-combobox
+         v-model="category_val"
+         :items="category"
+         label="Category"
+         :rules="[(v) => !!v || 'This is required']"
+         @click="resetCategory"
+      ></v-combobox>
 
-         <v-divider></v-divider>
-         <v-expansion-panels>
-            <v-expansion-panel v-for="(item, i) in categories" :key="i">
-               <v-expansion-panel-header>
-                  {{ item.category }}
-               </v-expansion-panel-header>
-               <v-expansion-panel-content>
-                  <v-list dense>
-                     <v-list-item
-                        link
-                        v-for="(ctg, idx) in item.sub_category"
-                        :key="idx"
-                        router
-                        @click.prevent="
-                           $router.push(`/product/${ctg.toLowerCase()}/`)
-                        "
-                     >
-                        <v-list-item-content>
-                           <v-list-item-title>
-                              {{ ctg }}
-                           </v-list-item-title>
-                        </v-list-item-content>
-                     </v-list-item>
-                  </v-list>
-               </v-expansion-panel-content>
-            </v-expansion-panel>
-         </v-expansion-panels>
-      </v-navigation-drawer>
+      <v-combobox
+         v-model="sub_category_val"
+         :items="sub_category"
+         label="Sub category"
+         :rules="[(v) => !!v || 'This is required']"
+      ></v-combobox>
    </div>
 </template>
 
 <script>
 export default {
    data: () => ({
-      clipped: true,
-      drawer: null,
       categories: [
          {
             category: "Металлопрокат",
@@ -104,7 +79,7 @@ export default {
          {
             category: "Освещение и световые приборы",
             sub_category: [
-               "Светодиодное освещение",
+               " Светодиодное освещение",
                "Промышленные приборы",
                "Портативное освещение",
                "Прочие освещение и световые приборы",
@@ -121,7 +96,31 @@ export default {
             ],
          },
       ],
+      category: [],
+      sub_category: [],
+      category_val: "",
+      sub_category_val: "",
    }),
+   methods: {
+      selected() {
+         this.categories.forEach((el) => {
+            if (el.category == this.category_val) {
+               this.sub_category = el.sub_category;
+            }
+         });
+      },
+      resetCategory() {
+         this.sub_category_val = "";
+      },
+   },
+   watch: {
+      category_val(v) {
+         this.selected();
+      },
+   },
+   mounted() {
+      this.category = this.categories.map((elem) => elem.category);
+   },
 };
 </script>
 

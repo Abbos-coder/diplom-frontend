@@ -3,7 +3,10 @@ export const state = () => ({
    username: "user 1",
    sidebar: false,
    basket: [],
-   user_data: [],
+   user_data: {
+      token: "",
+      user: {},
+   },
 });
 
 export const mutations = {

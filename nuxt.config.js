@@ -45,6 +45,10 @@ export default {
    styleResources: {
       scss: ["./assets/vars/*.scss", "./assets/abstracts/_mixin.scss"],
    },
+   //  loading indecator
+   loading: {
+      color: "#1E88E5",
+   },
 
    // Modules: https://go.nuxtjs.dev/config-modules
    modules: [

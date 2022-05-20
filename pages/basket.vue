@@ -1,12 +1,21 @@
 <template>
    <div class="container">
       <h1 class="text-center text-h4 mt-3 text-capitalize">корзина</h1>
-      <h3
-         class="text-center text-h6 warning--text mt-10"
-         v-if="!products.length"
-      >
-         Продукт ешо не выбран!
-      </h3>
+      <div v-if="!products.length">
+         <h3 class="text-center text-h6 text-body-1 warning--text mt-6">
+            Продукт ешо не выбран!
+         </h3>
+         <v-row class="mt-5">
+            <v-btn
+               class="text-center ml-auto mr-auto text-capitalize"
+               color="info"
+               to="/"
+            >
+               home
+            </v-btn>
+         </v-row>
+      </div>
+
       <v-card
          elevation="2"
          class="basket"
@@ -70,7 +79,7 @@ export default {
    methods: {
       removeProduct(selected) {
          this.$store.commit("deleteProduct", selected);
-         this.$toast.error("Product delated !", {
+         this.$toast.error("Продукт удален !", {
             theme: "bubble",
          });
       },
