@@ -13,9 +13,16 @@
                   :rules="[(v) => !!v || 'This is required']"
                ></v-file-input>
                <v-combobox
-                  v-model="product.category"
-                  :items="items"
+                  v-model="category_val"
+                  :items="category"
                   label="Category"
+                  :rules="[(v) => !!v || 'This is required']"
+                  @click="resetCategory"
+               ></v-combobox>
+               <v-combobox
+                  v-model="sub_category_val"
+                  :items="sub_category"
+                  label="Sub category"
                   :rules="[(v) => !!v || 'This is required']"
                ></v-combobox>
                <v-text-field
@@ -129,49 +136,98 @@ export default {
          rating: 0,
          status: true,
       },
+      categories: [
+         {
+            category: "Металлопрокат",
+            sub_category: [
+               "Арматура",
+               "Стальные балки",
+               "Проволоки",
+               "Рулонные стали",
+            ],
+         },
+         {
+            category: "Лакокрасочная продукция",
+            sub_category: [
+               "Краски",
+               "Строительные клеи",
+               "Лаки",
+               "Грунтовки",
+               "Растворители",
+            ],
+         },
+         {
+            category: "Сухие строительные смеси",
+            sub_category: [
+               "Штукатурка",
+               "Шпатлевки",
+               "Цемент",
+               "Строительный гипс",
+               "Известь",
+            ],
+         },
+         {
+            category: "Сыпучие строительные материалы",
+            sub_category: ["Песок", "Щебень", "Клинец", "Керамзит", "Асфальт"],
+         },
+         {
+            category: "Герметики",
+            sub_category: [
+               "Силиконовые герметики",
+               "Полиуретановые герметики",
+               "Клеи-герметики",
+               "Герметики и мастики",
+               "Акриловые герметики",
+            ],
+         },
 
-      items: [
-         "Арматура",
-         "Стальные балки",
-         "Проволоки",
-         "Рулонные стали",
-         "Краски",
-         "Строительные клеи",
-         "Лаки",
-         "Грунтовки",
-         "Растворители",
-         "Штукатурка",
-         "Шпатлевки",
-         "Цемент",
-         "Строительный гипс",
-         "Известь",
-         "Песок",
-         "Щебень",
-         "Клинец",
-         "Керамзит",
-         "Асфальт",
-         "Силиконовые герметики",
-         "Полиуретановые герметики",
-         "Клеи-герметики",
-         "Герметики и мастики",
-         "Акриловые герметики",
-         "Стекло",
-         "Стеклянные витражи",
-         "Жидкое стекло",
-         "Листовые прозрачные",
-         "Узорчатые стекла",
-         "Светодиодное освещение",
-         "Промышленные приборы",
-         "Портативное освещение",
-         "Прочие освещение и световые приборы",
-         "Сэндвич-панели",
-         "Мрамор",
-         "Газобетонные блоки",
-         "Гранит",
-         "Брусчатка",
+         { category: "Монтажные пены", sub_category: ["Монтажная пена"] },
+         {
+            category: "Стекла",
+            sub_category: [
+               "Opгстекло",
+               "Стеклянные витражи",
+               "Жидкое стекло",
+               "Листовые прозрачные",
+               "Узорчатые стекла",
+            ],
+         },
+         {
+            category: "Освещение и световые приборы",
+            sub_category: [
+               " Светодиодное освещение",
+               "Промышленные приборы",
+               "Портативное освещение",
+               "Прочие освещение и световые приборы",
+            ],
+         },
+         {
+            category: "Кладочные материалы",
+            sub_category: [
+               "Сэндвич-панели",
+               "Мрамор",
+               "Газобетонные блоки",
+               "Гранит",
+               "Брусчатка",
+            ],
+         },
       ],
+      category: [],
+      sub_category: [],
+      category_val: "",
+      sub_category_val: "",
    }),
    methods: {
+      selected() {
+         this.categories.forEach((el) => {
+            if (el.category == this.category_val) {
+               this.sub_category = el.sub_category;
+            }
+         });
+      },
+      resetCategory() {
+         this.sub_category_val = "";
+      },
       productImage() {
          const file = this.image;
          !!file ? (this.product.image = URL.createObjectURL(file)) : null;
@@ -191,7 +247,7 @@ export default {
             let formData = new FormData();
             formData.append("userId", this.product.user_id);
             formData.append("image", this.image);
-            formData.append("category", this.product.category.toLowerCase());
+            formData.append("category", this.sub_category_val.toLowerCase());
             formData.append("title", this.product.name);
             formData.append("price", this.product.price);
             formData.append("rating", this.product.rating);
@@ -225,10 +281,17 @@ export default {
          }
       },
    },
+   watch: {
+      category_val(v) {
+         this.selected();
+      },
+   },
    mounted() {
       const get_data = localStorage.getItem("user");
       const user = JSON.parse(get_data);
       this.product.user_id = user.user._id;
+
+      this.category = this.categories.map((elem) => elem.category);
    },
 };
 </script>

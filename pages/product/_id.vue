@@ -68,7 +68,6 @@ export default {
       await this.$axios
          .$get(`/api/product/category/${params.id}`)
          .then((res) => {
-            console.log(res);
             this.products = res;
          })
          .catch((error) => {

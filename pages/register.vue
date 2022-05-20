@@ -60,6 +60,7 @@
                            :rules="passRules"
                            required
                            prepend-icon="mdi-lock"
+                           :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
                         ></v-text-field>
                      </v-col>
                      <v-col cols="12" lg="6" sm="6" xs="12">

@@ -1,6 +1,8 @@
 <template>
    <nav class="navbar">
-      <v-app-bar elevation="1" height="35" :clipped-left="clipped" app>
+      <!-- class="grey darken-3 white--text" -->
+
+      <v-app-bar elevation="1" height="37" :clipped-left="clipped" app>
          <v-row class="navbar mx-auto px-n2" align="center" justify="center">
             <div class="navbar__block mr-2">
                <div class="navbar__phone text-caption">
@@ -8,7 +10,7 @@
                      mdi-phone
                   </v-icon>
                   <strong>
-                     <span>Call us now:</span>
+                     <span>Позвоните нам сейчас:</span>
                      <a href="tel:+998994036828">+998 99 403-68-28</a>
                   </strong>
                </div>
@@ -28,7 +30,7 @@
                      class="user-name primary--text font-weight-medium text-body-2 ml-2"
                      @click="openProfile"
                   >
-                     {{ user_name }}
+                     {{ $store.state.user_data.user.firstname }}
                      <v-icon color="primary">mdi-chevron-down</v-icon>
                      <div class="profile">
                         <nuxt-link to="/upload">
@@ -41,10 +43,10 @@
                            <v-icon class="mr-2" size="22"> mdi-store </v-icon>
                            Мои продукты
                         </nuxt-link>
-                        <nuxt-link to="/">
-                           <v-icon size="22" class="mr-2"
-                              >mdi-cog-outline</v-icon
-                           >
+                        <nuxt-link to="/profile">
+                           <v-icon size="22" class="mr-2">
+                              mdi-cog-outline
+                           </v-icon>
                            Редактировать профиль
                         </nuxt-link>
                         <div @click="logOut">
@@ -71,9 +73,32 @@
                   append-icon="mdi-magnify"
                   label="Search"
                   placeholder="Search..."
+                  @click:append="searchResult"
                   solo
                   class="mt-4"
+                  v-model="search"
+                  @keypress="searchResult"
                ></v-text-field>
+               <div
+                  class="search__result"
+                  v-if="search_result.length && search.length"
+               >
+                  <p
+                     v-for="(product, idx) in search_result"
+                     :key="idx"
+                     @click="
+                        $router.push(`/product-info/${product._id}`), reset()
+                     "
+                  >
+                     <span>
+                        {{ product.title }}
+                     </span>
+                     <br />
+                     <small class="mt-n2 d-block blue--text text--darken-3">
+                        {{ product.company_name }}
+                     </small>
+                  </p>
+               </div>
             </div>
             <v-btn to="/basket" color="primary" class="text-capitalize">
                <v-icon>mdi-cart</v-icon>
@@ -90,7 +115,7 @@
             Все продукты
          </nuxt-link>
          <nuxt-link to="/about" class="blue--text text--darken-3 text-bold">
-            О нас
+            О компании
          </nuxt-link>
          <nuxt-link to="/contact" class="blue--text text--darken-3 text-bold">
             Контакт
@@ -104,6 +129,8 @@ export default {
    data: () => ({
       user_name: "",
       clipped: true,
+      search: "",
+      search_result: [],
    }),
    methods: {
       openSidebar() {
@@ -117,6 +144,22 @@ export default {
       openProfile() {
          const profile = document.querySelector(".profile");
          profile.classList.toggle("active");
+      },
+      searchResult() {
+         if (this.search.length) {
+            this.$axios
+               .$get(`/api/product/search-product/${this.search}`)
+               .then((res) => {
+                  this.search_result = res;
+               })
+               .catch((error) => {
+                  console.error(error);
+               });
+         }
+      },
+      reset() {
+         this.search = "";
+         this.search_result = [];
       },
    },
    mounted() {
@@ -229,6 +272,24 @@ body {
    }
    .navbar__search {
       width: 100%;
+      position: relative;
+   }
+}
+.search__result {
+   position: absolute;
+   padding: 10px 20px;
+   border-radius: 0 0 5px 5px;
+   box-shadow: 0px 2px 6px #7777;
+   top: 72px;
+   background-color: #fff;
+   height: auto;
+   width: min(100%, 500px);
+   p {
+      cursor: pointer;
+      font-weight: 500;
+      &:hover {
+         color: #2b81d6;
+      }
    }
 }
 .navbar {
