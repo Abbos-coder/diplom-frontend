@@ -47,10 +47,15 @@ export default {
       drawer: null,
       categories: [],
    }),
-   async mounted() {
-      await this.$axios.$get("/api/category/").then((res) => {
-         this.categories = res;
-      });
+   created() {
+      this.getCategory();
+   },
+   methods: {
+      async getCategory() {
+         await this.$axios.$get("/api/category/").then((res) => {
+            this.categories = res;
+         });
+      },
    },
 };
 </script>

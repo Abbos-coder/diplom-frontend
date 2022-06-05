@@ -108,8 +108,6 @@
 </template>
 
 <script>
-import { isThisExpression } from "@babel/types";
-
 export default {
    auth: true,
    data: () => ({

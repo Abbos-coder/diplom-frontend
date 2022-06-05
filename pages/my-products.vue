@@ -74,7 +74,7 @@ export default {
    async asyncData({ $axios, store }) {
       const user_id = store.state.user_data.user._id;
       const products = await $axios.$get(
-         `http://127.0.0.1:8080/api/product/user-product/${user_id}`
+         `https://diploma-tuit.herokuapp.com/api/product/user-product/${user_id}`
       );
       return { products };
    },
@@ -88,7 +88,9 @@ export default {
 
          const user_id = this.$store.state.user_data.user._id;
          await this.$axios
-            .$get(`http://127.0.0.1:8080/api/product/user-product/${user_id}`)
+            .$get(
+               `https://diploma-tuit.herokuapp.com/api/product/user-product/${user_id}`
+            )
             .then((res) => {
                this.products = res;
             });
