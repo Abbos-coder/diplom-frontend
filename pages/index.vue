@@ -80,7 +80,9 @@
 <script>
 export default {
    async asyncData({ $axios }) {
-      const products = await $axios.$get(`http://127.0.0.1:8080/api/product`);
+      const products = await $axios.$get(
+         `https://diploma-tuit.herokuapp.com/api/product`
+      );
       return { products };
    },
    auth: false,
@@ -108,9 +110,7 @@ export default {
       const user = JSON.parse(get_data);
       this.$store.state.user_data = user;
 
-      const products = await this.$axios.$get(
-         `http://127.0.0.1:8080/api/product`
-      );
+      const products = await this.$axios.$get(`/api/product`);
       this.products = products.reverse();
    },
 };
